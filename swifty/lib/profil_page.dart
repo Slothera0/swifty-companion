@@ -96,7 +96,7 @@ class _ProfilPageState extends State<ProfilPage> {
             child: _sectionStats(user),
           ),
           SliverToBoxAdapter(
-            child: _sectionInfos(user),
+            child: _sectionInfos(user), 
           ),
           SliverList(delegate: SliverChildBuilderDelegate(
             (context, index) {

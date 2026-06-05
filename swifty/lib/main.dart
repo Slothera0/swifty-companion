@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'users_array.dart';
 import 'profil_page.dart';
 import 'search_page.dart';
 
 void main() async {
-  await dotenv.load(fileName: '.env');
   runApp(const Swifty());
 }
 

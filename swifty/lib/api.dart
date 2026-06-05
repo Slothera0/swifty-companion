@@ -1,13 +1,12 @@
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:convert';
 
 class Api42 {
   static String? _accessToken;
 
   static Future<void> authenticate() async {
-    final uid = dotenv.env['API_UID'];
-    final secret = dotenv.env['API_SECRET'];
+    const String uid = String.fromEnvironment('API_UID');
+    const String secret = String.fromEnvironment('API_SECRET');
 
     final response = await http.post(
       Uri.parse('https://api.intra.42.fr/oauth/token'),

@@ -26,7 +26,7 @@ class _UsersArrayState extends State<UsersArray> {
     _loadMore();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >= 
-          _scrollController.position.maxScrollExtent - 600) { // changer plus tard
+          _scrollController.position.maxScrollExtent - 1000) { // changer plus tard
         _loadMore();
       }
     });
@@ -53,17 +53,23 @@ class _UsersArrayState extends State<UsersArray> {
       _loading = false;
       if (news.isEmpty) _moreResults = false;
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.position.maxScrollExtent == 0 && _moreResults) {
+        _loadMore();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
       controller: _scrollController,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 3,
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+      maxCrossAxisExtent: 150,
       crossAxisSpacing: 8,
       mainAxisSpacing: 8,
-      childAspectRatio: 0.75,
+      childAspectRatio: 0.70,
       ),
       itemCount: _users.length + 1,
       itemBuilder: (context, index) {

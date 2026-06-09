@@ -31,7 +31,7 @@ class _ProfilPageState extends State<ProfilPage> {
     } catch (e) {
       setState(() {
         _loading = false;
-        _erreur = 'Délai dépassé, vérifie ta connexion';
+        _erreur = 'Délai dépassé, vérifie ta connexion ou si le login existe';
       });
     }
   }
@@ -46,6 +46,7 @@ class _ProfilPageState extends State<ProfilPage> {
 
     if (_erreur != null) {
       return Scaffold(
+        appBar: AppBar(),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -70,6 +71,12 @@ class _ProfilPageState extends State<ProfilPage> {
     }
 
     final user = _user!;
+    final cursus = (user['cursus_users'] as List?)
+      ?.firstWhere(
+        (c) => c['grade'] != 'Pisciner' && c['skills'] != null,
+        orElse: () => null,
+      );
+    final skillCount = cursus?['skills']?.length ?? 0;
 
     return Scaffold(
       body: CustomScrollView(
@@ -97,6 +104,39 @@ class _ProfilPageState extends State<ProfilPage> {
           ),
           SliverToBoxAdapter(
             child: _sectionInfos(user), 
+          ),
+
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: const Text(
+                'Skills',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                var skill =cursus?['skills']?[index];
+                return ListTile(
+                  title: Text(skill['name']),
+                  trailing: Text(skill['level'].toStringAsFixed(2)),
+                );
+              },
+              childCount: skillCount ?? 0,
+            ),
+          ),
+
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: Text(
+                'Projets',
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
           SliverList(delegate: SliverChildBuilderDelegate(
             (context, index) {
@@ -134,7 +174,7 @@ class _ProfilPageState extends State<ProfilPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _stat('Level', level.toString()),
+          _stat('Level', level.toStringAsFixed(2)),
           _stat('Points', user['correction_point']?.toString() ?? '0'),
           _stat('Wallet', '${user['wallet'] ?? 0} ₳'),
         ],
